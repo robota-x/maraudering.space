@@ -29,7 +29,7 @@ pubnub.addListener({
       processPosition(msg.message);
     } else if (msg.channel === 'beginEncounter') {
       processEncounter(msg.message);
-    }
+    } else if (msg.channel === '')
   }
 });
 
