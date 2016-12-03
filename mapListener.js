@@ -1,4 +1,5 @@
 var PubNub = require('pubnub')
+var geolib = require('geolib');
 
 var pubnub = new PubNub({
     subscribeKey: "sub-c-6d62ed1e-b978-11e6-b490-02ee2ddab7fe",
@@ -6,9 +7,13 @@ var pubnub = new PubNub({
     ssl: true
 });
 
-var HOTSPOTS: [{
-  lat: 42.42,
-  lng: 42.42,
+var HOTSPOTS = [{
+  latitude: 51.5443569,
+  longitude: -0.0222026,
+  id: 142
+},{
+  latitude: 51.5443569,
+  longitude: -0.0222026,
   id: 142
 }]
 
@@ -21,32 +26,23 @@ pubnub.addListener({
   }
 });
 
+function geodeDistance(pointA, pointB) {
+  return geolib.getDistance(pointA, pointB, 1);
+}
 
 function processPosition(msg) {
   var userPosition = msg.message.position;
   var userChannel = msg.message.channel;
   console.log('user is at ' + userPosition + ' and callback channel is' + userChannel);
+  if (geodeDistance(userPosition, HOTSPOTS[0]) < 50 ) {};
 }
 
-function distance(pointA, pointB) {
-  return Math.sqrt(pointA*pointA + pointB*pointB);
-}
+console.log(geodeDistance(HOTSPOTS[0],HOTSPOTS[1]));
 
 
-// pubnub.addListener({
-//     message: function(m) {
-//         // handle message
-//         var channelName = m.channel; // The channel for which the message belongs
-//         var channelGroup = m.subscription; // The channel group or wildcard subscription match (if exists)
-//         var pubTT = m.timetoken; // Publish timetoken
-//         var msg = m.message; // The Payload
-//         console.log('listener here: a msg has been sent', channelName, channelGroup, pubTT, msg);
-//     },
+// pubnub.subscribe({
+//     channels: ['mainChannel'],
+//     withPresence: true // also subscribe to presence instances.
 // })
-
-pubnub.subscribe({
-    channels: ['mainChannel'],
-    withPresence: true // also subscribe to presence instances.
-})
-
-console.log('Map listener');
+//
+// console.log('Map listener');
