@@ -13,12 +13,22 @@ var HOTSPOTS = [{   // copper box arena
   latitude: 51.5443569,
   longitude: -0.0222026,
   id: 142
-}]
+}];
+
+var MONSTERS = {
+  142: {
+    name: 'monsterName',
+    hp: 109,
+    description: 'a hulking beast surprises you',
+  }
+}
 
 pubnub.addListener({
   message: function(msg) {
     if(msg.channel === 'location') {
       processPosition(msg.message);
+    } else if (msg.channel === 'beginEncounter') {
+      processEncounter(msg.message);
     }
   }
 });
@@ -34,8 +44,12 @@ function processPosition(data) {
   var userChannel = data.playerID;
   // console.log('user is at ' + userPosition + ' and callback channel is' + userChannel);
   if (geodeDistance(userPosition, HOTSPOTS[0]) < 50 ) {
-      sendMessage(userChannel, 'startEncounter');
+      sendMessage(userChannel, {encounterID: HOTSPOTS[0].id});  // warn the client he triggered an encounter.
   }
+}
+
+function processEncounter(data) {
+  sendMessage(MONSTERS[data.encounterID]); // send over encounter data once the user starts the encounter.
 }
 
 function sendMessage(channel, message) {
