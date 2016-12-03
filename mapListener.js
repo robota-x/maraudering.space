@@ -6,6 +6,11 @@ var pubnub = new PubNub({
     ssl: true
 });
 
+var HOTSPOTS: [{
+  lat: 42.42,
+  lng: 42.42,
+  id: 142
+}]
 
 pubnub.addListener({
   message: function(msg) {
@@ -22,6 +27,11 @@ function processPosition(msg) {
   var userChannel = msg.message.channel;
   console.log('user is at ' + userPosition + ' and callback channel is' + userChannel);
 }
+
+function distance(pointA, pointB) {
+  return Math.sqrt(pointA*pointA + pointB*pointB);
+}
+
 
 // pubnub.addListener({
 //     message: function(m) {
