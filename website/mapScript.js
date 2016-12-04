@@ -20,9 +20,8 @@ function centerMapOnPlayer() {
 }
 
 function setMarker(mark) {
-  // console.log('marker set', mark);
-  if (mark.id in playerMarkers) {
-
+  if (mark.playerID in playerMarkers) {
+    playerMarkers[mark.playerID].setPosition({lat: mark.latitude, lng: mark.longitude});
   } else {
     playerMarkers[mark.playerID] =
       new google.maps.Marker({
@@ -35,7 +34,7 @@ function setMarker(mark) {
 // pubnub polling and more global polluting.
 
 pubnub = PUBNUB({
-        subscribe_key : 'sub-c-6d62ed1e-b978-11e6-b490-02ee2ddab7fe'
+        subscribe_key : 'api key'
     })
 
 pubnub.subscribe({
