@@ -1,6 +1,4 @@
 export default (request) => {
-  var console = require("console");
-  var pubnub = require("pubnub");
 
   var encounterData = {
     type: 'monster',
@@ -14,20 +12,23 @@ export default (request) => {
     xp: 5
   }
 
-  var msg = request.message;
-  if (msg.type === 'startEncounter') {
-    handleEncounterStart(request.message);
-  } else if (msg.type === 'spellCast'){
-    handleEncounterEnd();
+  if (request.message.type === 'startEncounter') {
+    handleEncounterStart(request);
+  } else if (request.message.type === 'spellCast'){
+    handleEncounterEnd(request);
   }
 
-  function handleEncounterStart(msg) {
+  function handleEncounterStart(req) {
     //grab encounter stuff via api call to c# backend.
-    return Promise.resolve(encounterData);
+    req.message = { encounterStatus: 'start', data: encounterData}; // change the msg.
+    // return Promise.resolve(req);
   }
 
-  function handleEncounterEnd(msg) {
+  function handleEncounterEnd(req) {
     //grab loot via api call to the c# backend.
-    return Promise.resolve({ encounterStatus: 'win', encounterLoot: encounterLoot});
+    req.message = { encounterStatus: 'win', encounterLoot: encounterLoot};
+    // return Promise.resolve(req);
   }
+
+  return Promise.resolve(request);
 };
