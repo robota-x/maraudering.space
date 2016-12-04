@@ -30,3 +30,17 @@ function setMarker(mark, map) {
       });
   }
 }
+
+// pubnub polling and more global polluting.
+
+pubnub = PUBNUB({
+        publish_key : 'demo',
+        subscribe_key : 'demo'
+    })
+
+pubnub.subscribe({
+    channel : "location",
+    message : function (message) {
+        console.log('message', message);
+    },
+})
