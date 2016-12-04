@@ -59,7 +59,7 @@ export default (request) => {
 
   try {
     if(near_event(request)) {
-      pubnub.publish({channel: "location", message: {eventAvailable: true, playerID: request.message.playerID}});
+      pubnub.publish({channel: "events", message: {eventAvailable: true, playerID: request.message.playerID}});
     }
 
     return Promise.resolve(request);
